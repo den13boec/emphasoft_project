@@ -21,13 +21,12 @@ class Booking(models.Model):
         return f"{self.room} - {self.user}"
 
     def save(self, *args, **kwargs):
-        # Проверка на пересечение бронирований
         if self.end_date < self.start_date:
-            raise ValueError("Дата окончания не может быть раньше даты начала")
-        # Исключаем текущее бронирование при проверке пересечений
+            raise ValueError("The end date cannot be earlier than the start date")
+        # Exclude the current reservation when checking intersections
         conflicting_bookings = Booking.objects.filter(
             room=self.room, start_date__lte=self.end_date, end_date__gte=self.start_date
         ).exclude(pk=self.pk)
         if conflicting_bookings.exists():
-            raise ValueError("Эта комната уже забронирована на указанный период")
+            raise ValueError("This room is already booked for the specified period")
         super().save(*args, **kwargs)
