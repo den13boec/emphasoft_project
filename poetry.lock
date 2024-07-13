@@ -226,6 +226,17 @@ files = [
 ]
 
 [[package]]
+name = "python-decouple"
+version = "3.8"
+description = "Strict separation of settings from code."
+optional = false
+python-versions = "*"
+files = [
+    {file = "python-decouple-3.8.tar.gz", hash = "sha256:ba6e2657d4f376ecc46f77a3a615e058d93ba5e465c01bbe57289bfb7cce680f"},
+    {file = "python_decouple-3.8-py3-none-any.whl", hash = "sha256:d0d45340815b25f4de59c974b855bb38d03151d81b037d9e3f463b0c9f8cbd66"},
+]
+
+[[package]]
 name = "ruff"
 version = "0.5.1"
 description = "An extremely fast Python linter and code formatter, written in Rust."
@@ -303,4 +314,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "954db4b028501892d1b897f6a951542d55ce03ce8c7f5b5d6c089003f73ff0ef"
+content-hash = "24fab934ae6cf8a3b6352ef0f3562c09ebfd1a32b1bf397ec7fe5c747fe0b698"
