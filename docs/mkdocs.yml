@@ -1,0 +1,61 @@
+site_name: 'Документация'
+site_url: 'https://den13boec.github.io/emphasoft_project'
+
+theme:
+  name: 'material'
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.top
+    - toc.integrate
+    - search.suggest
+    - search.highlights
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+  language: ru
+
+  palette:
+    - scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Светлая тема
+      primary: indigo
+      accent: indigo
+
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Тёмная тема
+      primary: indigo
+      accent: indigo
+
+nav:
+  - 'Домой': index.md
+  - 'Запуск проекта': run.md
+  - 'API': api.md
+
+markdown_extensions:
+  - toc:
+      permalink: true
+
+plugins:
+  - search:
+      lang: ru
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/den13boec/emphasoft_project
+      text: "Project on GitHub"
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
