@@ -6,18 +6,28 @@ from .models import Booking, Room
 
 class RoomFilter(django_filters.FilterSet):
     min_price = django_filters.NumberFilter(
-        field_name="price_per_night", lookup_expr="gte"
+        field_name="price_per_night",
+        lookup_expr="gte",
     )
     max_price = django_filters.NumberFilter(
-        field_name="price_per_night", lookup_expr="lte"
+        field_name="price_per_night",
+        lookup_expr="lte",
     )
-    min_capacity = django_filters.NumberFilter(field_name="capacity", lookup_expr="gte")
-    max_capacity = django_filters.NumberFilter(field_name="capacity", lookup_expr="lte")
+    min_capacity = django_filters.NumberFilter(
+        field_name="capacity",
+        lookup_expr="gte",
+    )
+    max_capacity = django_filters.NumberFilter(
+        field_name="capacity",
+        lookup_expr="lte",
+    )
     start_date = django_filters.DateFilter(
-        label="Start date", method="filter_by_availability"
+        label="Start date",
+        method="filter_by_availability",
     )
     end_date = django_filters.DateFilter(
-        label="End date", method="filter_by_availability"
+        label="End date",
+        method="filter_by_availability",
     )
 
     class Meta:

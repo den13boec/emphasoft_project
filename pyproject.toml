@@ -45,3 +45,6 @@ convention = "google"
 
 [tool.mypy]
 ignore_missing_imports = true
+
+[tool.ruff.format]
+skip-magic-trailing-comma = false

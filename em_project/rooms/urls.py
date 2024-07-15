@@ -6,8 +6,8 @@ from . import views
 from .views import RegisterView
 
 router = SimpleRouter()
-router.register("rooms", views.RoomViewSet)
-router.register("bookings", views.BookingViewSet)
+router.register("rooms", views.RoomViewSet, basename="rooms")
+router.register("bookings", views.BookingViewSet, basename="bookings")
 
 urlpatterns = [
     path("api/", include(router.urls)),
