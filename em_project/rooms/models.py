@@ -3,7 +3,7 @@ from django.db import models
 
 
 class Room(models.Model):
-    room = models.CharField(max_length=100, null=True, unique=True)
+    room = models.CharField(max_length=100, unique=True)
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2)
     capacity = models.IntegerField()
 
