@@ -1,4 +1,5 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AnonymousUser, User
+from django.db.models.query import QuerySet
 from django.utils.dateparse import parse_date
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, status
@@ -37,13 +38,13 @@ class BookingViewSet(ModelViewSet):
     # def perform_create(self, serializer):
     #     serializer.save(user=self.request.user)
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         if self.request.user.is_authenticated:
             return Booking.objects.filter(user=self.request.user)
         return Booking.objects.none()
 
     @action(detail=False, methods=["post"], url_path="book-room")
-    def book_room(self, request: Request):
+    def book_room(self, request: Request) -> Response:
         room = request.data.get("room")
         start_date_str = request.data.get("start_date")
         end_date_str = request.data.get("end_date")
@@ -101,7 +102,7 @@ class BookingViewSet(ModelViewSet):
         )
 
     @action(detail=True, methods=["post"], url_path="cancel")
-    def cancel_booking(self, request, pk=None):
+    def cancel_booking(self, request: Request, pk=None) -> Response:
         try:
             booking = Booking.objects.get(pk=pk)
         except Booking.DoesNotExist:
@@ -110,7 +111,9 @@ class BookingViewSet(ModelViewSet):
             )
 
         # Check if the user is the owner of the booking or a superuser
-        if request.user == booking.user or request.user.is_superuser:
+        if request.user == booking.user or (
+            isinstance(request.user, AnonymousUser) and request.user.is_superuser
+        ):
             booking.delete()
             return Response(
                 {"message": "Booking cancelled successfully."},

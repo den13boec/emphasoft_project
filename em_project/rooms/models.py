@@ -7,8 +7,8 @@ class Room(models.Model):
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2)
     capacity = models.IntegerField()
 
-    def __str__(self):
-        return self.room
+    def __str__(self) -> str:
+        return self.room if self.room is not None else ""
 
 
 class Booking(models.Model):
@@ -17,10 +17,10 @@ class Booking(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.room} - {self.user}"
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         if self.end_date < self.start_date:
             raise ValueError("The end date cannot be earlier than the start date")
         # Exclude the current reservation when checking intersections

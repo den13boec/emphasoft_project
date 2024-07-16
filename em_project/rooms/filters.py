@@ -1,3 +1,5 @@
+import datetime
+
 import django_filters
 from django.db.models.query import QuerySet
 
@@ -41,15 +43,17 @@ class RoomFilter(django_filters.FilterSet):
             "end_date",
         ]
 
-    def filter_by_availability(self, queryset: QuerySet, name, value):
+    def filter_by_availability(
+        self, queryset: QuerySet, name: str, value: datetime.date
+    ) -> QuerySet:
         start_date = self.data.get("start_date")
         end_date = self.data.get("end_date")
         if start_date and end_date:
             if start_date > end_date:
                 return queryset.none()
             conflicting_bookings = Booking.objects.filter(
-                start_date__lte=end_date, end_date__gte=start_date
+                start_date__lte=end_date,
+                end_date__gte=start_date,
             ).values_list("room_id", flat=True)
             queryset = queryset.exclude(id__in=conflicting_bookings)
-
         return queryset
