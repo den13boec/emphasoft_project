@@ -91,11 +91,11 @@ WSGI_APPLICATION = "empha.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "hotel",
-        "USER": "superuser",
-        "PASSWORD": "superuser",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "NAME": config("NAME"),
+        "USER": config("USER"),
+        "PASSWORD": config("PASSWORD"),
+        "HOST": config("HOST"),
+        "PORT": config("PORT"),
         'TEST': {
             'NAME': 'mytestdatabase',
         },
