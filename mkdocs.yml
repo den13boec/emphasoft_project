@@ -34,8 +34,8 @@ theme:
 
 nav:
   - 'Домой': index.md
-  - 'Запуск проекта': run.md
-  - 'API': api.md
+  - 'Сборка проекта': run.md
+  - 'Документация API': api.md
 
 markdown_extensions:
   - toc:
