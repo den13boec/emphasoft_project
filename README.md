@@ -1,6 +1,6 @@
 # Приложение для бронирования комнат в отеле
 
-Это тестовое задание для компании Emphasoft - API на Django Rest Framework в связке с базой данных PostgreSQL.
+Тестовое задание для компании Emphasoft - API на Django Rest Framework в связке с базой данных PostgreSQL.
 
 ## Реализованные требования
 
@@ -78,4 +78,5 @@
 
 [Документация API](https://den13boec.github.io/emphasoft_project/api/)
 
-> ⚠️ В описании методов API, везде где написано: `/auth/register/` имеется в виду `http://127.0.0.1:8000/api/auth/register/` и остальные URL по аналогии
+> [!IMPORTANT]
+> В описании методов API, везде где написано: `/auth/register/` имеется в виду `http://127.0.0.1:8000/api/auth/register/` и остальные URL по аналогии
