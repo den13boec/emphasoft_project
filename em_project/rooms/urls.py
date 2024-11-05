@@ -13,4 +13,5 @@ urlpatterns = [
     path("api/", include(router.urls)),
     path("api/auth/register/", RegisterView.as_view(), name="register"),
     path("api/auth/login/", obtain_auth_token, name="login"),
+    path("api/drf-auth/", include('rest_framework.urls')),
 ]
