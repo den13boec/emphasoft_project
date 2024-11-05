@@ -1,16 +1,13 @@
 from django.contrib.auth.models import AnonymousUser, User
 from django.db.models.query import QuerySet
-from django.utils.dateparse import parse_date
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, status
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.decorators import action
 from rest_framework.permissions import (
     AllowAny,
     IsAuthenticated,
     IsAuthenticatedOrReadOnly,
 )
-from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
@@ -30,79 +27,54 @@ class RoomViewSet(ReadOnlyModelViewSet):
 
 
 class BookingViewSet(ModelViewSet):
-    queryset = Booking.objects.all()
     serializer_class = BookingSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    # def perform_create(self, serializer):
-    #     serializer.save(user=self.request.user)
-
     def get_queryset(self) -> QuerySet:
-        if self.request.user.is_authenticated:
-            return Booking.objects.filter(user=self.request.user)
-        return Booking.objects.none()
+        return Booking.objects.filter(user=self.request.user)
 
-    @action(detail=False, methods=["post"], url_path="book-room")
-    def book_room(self, request: Request) -> Response:
-        room = request.data.get("room")
-        start_date_str = request.data.get("start_date")
-        end_date_str = request.data.get("end_date")
-        if not room or not start_date_str or not end_date_str:
+    def create(self, request):
+        booking_serializer = self.get_serializer(data=request.data)
+        if not booking_serializer.is_valid():
             return Response(
-                {"error": "room, start_date, and end_date are required."},
-                status=status.HTTP_400_BAD_REQUEST,
+                booking_serializer.errors, status=status.HTTP_400_BAD_REQUEST
             )
+        start_date = booking_serializer.validated_data["start_date"]
+        end_date = booking_serializer.validated_data["end_date"]
+        room_obj = booking_serializer.validated_data["room"]
 
+        # Check if the room exists
         try:
-            start_date = parse_date(start_date_str)
-            end_date = parse_date(end_date_str)
-        except ValueError as err:
-            return Response(
-                {"error": f"date error: {err}."}, status=status.HTTP_400_BAD_REQUEST
-            )
-
-        if not start_date or not end_date:
-            return Response(
-                {"error": "date error: bad format."}, status=status.HTTP_400_BAD_REQUEST
-            )
-
-        if start_date > end_date:
-            return Response(
-                {"error": "The end date cannot be earlier than the start date."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        try:
-            room_obj = Room.objects.get(room=room)
+            room_obj = Room.objects.get(pk=room_obj.id)
         except Room.DoesNotExist:
             return Response(
                 {"error": "Room does not exist."}, status=status.HTTP_404_NOT_FOUND
             )
-
-        # Check if the room is available
+        # Check room availability for the specified dates
         conflicting_bookings = Booking.objects.filter(
-            room=room_obj, start_date__lte=end_date, end_date__gte=start_date
+            pk=room_obj.id, start_date__lte=end_date, end_date__gte=start_date
         )
-
         if conflicting_bookings.exists():
             return Response(
                 {"error": "The room is not available for the selected dates."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
         # Create the booking
         booking = Booking(
             user=request.user, room=room_obj, start_date=start_date, end_date=end_date
         )
         booking.save()
-
+        # Return the successful response
         return Response(
-            {"message": "Room booked successfully."}, status=status.HTTP_201_CREATED
+            {
+                "message": "Room booked successfully.",
+                "data": (request.user.username, room_obj.room, start_date, end_date),
+            },
+            status=status.HTTP_201_CREATED,
         )
 
-    @action(detail=True, methods=["post"], url_path="cancel")
-    def cancel_booking(self, request: Request, pk=None) -> Response:
+    def destroy(self, request, pk=None):
         try:
             booking = Booking.objects.get(pk=pk)
         except Booking.DoesNotExist:
